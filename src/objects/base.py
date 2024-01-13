@@ -1,3 +1,5 @@
+from math import floor
+
 from core import Direction
 
 
@@ -13,36 +15,37 @@ class OceanObject:
 
 
 class MovingObject(OceanObject):
-    DEFAULT_MOVE_INDEX = 10
-    MAX_SPEED = 10
+    MAX_SPEED = 1.0
+    MIN_SPEED = 0.1
     direction: Direction
-    speed: int
-    move_index = DEFAULT_MOVE_INDEX
+    speed: float
+    move_index = 0
 
     def __init__(
         self,
         anchor_coordinates: tuple[int, int],
         skin: list[list[str]],
         direction: Direction,
-        speed: int = 1,
+        speed: float,
     ):
         super().__init__(anchor_coordinates)
         self.skin = skin
         self.direction = direction
         self.speed = min(self.MAX_SPEED, speed)
+        self.speed = max(self.MIN_SPEED, speed)
 
     def move(self) -> None:
         """Moves the object in the given direction."""
-        self.move_index -= self.speed
-        if self.move_index > 0:
-            return
-
-        else:
-            self.move_index += self.DEFAULT_MOVE_INDEX
-
         row_delta, col_delta = self.direction.value
         row, col = self.anchor
-        self.anchor = (row + row_delta, col + col_delta)
+        self.move_index += 1 * self.speed
+
+        self.anchor = (
+            row + row_delta * floor(self.move_index),
+            col + col_delta * floor(self.move_index),
+        )
+
+        self.move_index -= floor(self.move_index)
 
 
 class Fish(MovingObject):

@@ -5,13 +5,13 @@ from math import ceil
 from core import Direction
 from engine.utils import get_terminal_dimensions
 from objects.base import MovingObject, OceanObject
-from objects.fishes import FISHES, new_fish
+from objects.fishes import FISH_TYPES, new_fish
 
 
 class Ocean:
     SPAWN_RATE = 0.02
     """ Chance of a new object spawning per frame """
-    DESPAWN_DISTANCE = 20
+    DESPAWN_DISTANCE = 50
     """ Distance from the edge of the terminal at which objects are despawned """
 
     objects: list[OceanObject] = []
@@ -58,16 +58,18 @@ class Ocean:
         return 0 <= row < self.rows and 0 <= col < self.cols
 
     def generate_new_fish(self) -> MovingObject:
-        fish_name = random.choice(list(FISHES.keys()))
-        speed = random.randint(1, MovingObject.MAX_SPEED)
+        fish_name = random.choice(list(FISH_TYPES.keys()))
+        speed = random.random()
         direction = random.choice([Direction.LEFT, Direction.RIGHT])
+        fish = new_fish(fish_name, speed, (0, 0), direction)
 
         if direction == Direction.LEFT:
             anchor = (random.randint(0, self.rows - 2), self.cols)
         else:
-            anchor = (random.randint(0, self.rows - 2), -10)
+            anchor = (random.randint(0, self.rows - 2), -len(fish.skin[0]))
 
-        return new_fish(fish_name, speed, anchor, direction)
+        fish.anchor = anchor
+        return fish
 
     def update(self) -> None:
         """Updates the state of the ocean."""
