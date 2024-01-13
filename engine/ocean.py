@@ -9,6 +9,9 @@ from objects.fishes import FISHES, new_fish
 
 
 class Ocean:
+    DESPAWN_DISTANCE = 20
+    """ Distance from the edge of the terminal at which objects are despawned """
+
     objects: list[OceanObject] = []
     rows: int
     cols: int
@@ -71,7 +74,14 @@ class Ocean:
         if len(self.objects) < (self.rows * self.cols) ** 0.5 and random.random() < 0.1:
             self.put_object(self.generate_new_fish())
 
-    def has_anchor_out_of_bounds(self, obj: OceanObject) -> bool:
+        self.objects = [obj for obj in self.objects if not self.has_to_despawn(obj)]
+
+    def has_to_despawn(self, obj: OceanObject) -> bool:
         """Returns whether the given object has an anchor out of bounds."""
         row, col = obj.anchor
-        return not (-15 <= row < self.rows + 15 and -15 <= col < self.cols + 15)
+        return (
+            row < -self.DESPAWN_DISTANCE
+            or row >= self.rows + self.DESPAWN_DISTANCE
+            or col < -self.DESPAWN_DISTANCE
+            or col >= self.cols + self.DESPAWN_DISTANCE
+        )
