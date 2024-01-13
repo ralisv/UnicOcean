@@ -41,7 +41,7 @@ class Ocean:
                 for col, char in enumerate(l):
                     new_row, new_col = anchor_row + row, anchor_col + col
                     try:  # Due to signal handling, the terminal dimensions may change asynchronously
-                        if self.is_within_bounds((new_row, new_col)):
+                        if self.is_within_bounds((new_row, new_col)) and char != " ":
                             grid[anchor_row + row][anchor_col + col] = char
                     except IndexError:
                         pass

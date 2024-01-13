@@ -4,6 +4,19 @@ from core import Direction
 from objects.base import MovingObject
 
 
+def reverse_skin(input_file: Path) -> str:
+    """Reverses the direction where the fish is looking in the given skin."""
+
+    text = input_file.read_text()
+    for switch in ("(", ")"), ("[", "]"), ("{", "}"), ("<", ">"), ("/", "\\"):
+        fst, snd = switch
+        text = text.replace(fst, "TEMP").replace(snd, fst).replace("TEMP", snd)
+
+    lines = text.splitlines()
+    lines = [line[::-1] for line in lines]
+    return "\n".join(lines)
+
+
 def parse_skin(name: str) -> list[list[str]]:
     """Parses a skin from the given path."""
     return [
@@ -11,25 +24,8 @@ def parse_skin(name: str) -> list[list[str]]:
     ]
 
 
-SKINS_DIRECTORY = Path(__file__).parent / "fish-skins"
-FISHES: dict[str, dict[Direction, list[list[str]]]] = {
-    "blue": {
-        Direction.LEFT: parse_skin("blue-left"),
-        Direction.RIGHT: parse_skin("blue-right"),
-    },
-    "tuna": {
-        Direction.RIGHT: parse_skin("tuna-right"),
-        Direction.LEFT: parse_skin("tuna-left"),
-    },
-    "big": {
-        Direction.RIGHT: parse_skin("big-right"),
-        Direction.LEFT: parse_skin("big-left"),
-    },
-    "fin": {
-        Direction.RIGHT: parse_skin("fin-right"),
-        Direction.LEFT: parse_skin("fin-left"),
-    },
-}
+SKINS_DIRECTORY = Path(__file__).parent / "fishes"
+for file 
 
 
 def new_fish(
