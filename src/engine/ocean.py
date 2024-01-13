@@ -9,6 +9,8 @@ from objects.fishes import FISHES, new_fish
 
 
 class Ocean:
+    SPAWN_RATE = 0.02
+    """ Chance of a new object spawning per frame """
     DESPAWN_DISTANCE = 20
     """ Distance from the edge of the terminal at which objects are despawned """
 

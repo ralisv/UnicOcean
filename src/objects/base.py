@@ -45,6 +45,36 @@ class MovingObject(OceanObject):
         self.anchor = (row + row_delta, col + col_delta)
 
 
+class Fish(MovingObject):
+    skin_left: list[list[str]]
+    """ Skin for the fish swimming in the left direction """
+    skin_right: list[list[str]]
+    """ Skin for the fish swimming in the right direction """
+    carnivorous: bool
+
+    def __init__(
+        self,
+        anchor_coordinates: tuple[int, int],
+        skin: list[list[str]],
+        direction: Direction,
+        speed: int,
+        skin_left: list[list[str]],
+        skin_right: list[list[str]],
+        carnivorous: bool,
+    ):
+        super().__init__(anchor_coordinates, skin, direction, speed)
+        self.skin_left = skin_left
+        self.skin_right = skin_right
+        self.skin = skin_left if direction == Direction.LEFT else skin_right
+        self.carnivorous = carnivorous
+
+    def change_direction(self) -> None:
+        """Changes the direction of the fish."""
+        went_left = self.direction == Direction.LEFT
+        self.direction = Direction.RIGHT if went_left else Direction.LEFT
+        self.skin = self.skin_right if went_left else self.skin_left
+
+
 class StaticObject(OceanObject):
     def __init__(self, anchor_coordinates: tuple[int, int], skin: list[list[str]]):
         super().__init__(anchor_coordinates)
