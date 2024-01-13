@@ -1,7 +1,7 @@
 import signal
 
 from engine.utils import get_terminal_dimensions
-from objects.base import OceanObject
+from objects.base import MovingObject, OceanObject
 
 
 class Ocean:
@@ -31,12 +31,22 @@ class Ocean:
 
     def put_object(self, obj: OceanObject) -> None:
         """Puts an object on the grid."""
-        if not self.within_bounds(obj.anchor):
+        if not self.is_within_bounds(obj.anchor):
             raise ValueError("Anchor is out of bounds")
 
         self.objects.append(obj)
 
-    def within_bounds(self, coords: tuple[int, int]) -> bool:
+    def is_within_bounds(self, coords: tuple[int, int]) -> bool:
         """Returns whether the given anchor is within bounds."""
         row, col = coords
         return 0 <= row < self.rows and 0 <= col < self.cols
+
+    def update(self) -> None:
+        """Updates the state of the ocean."""
+        for obj in self.objects:
+            if isinstance(obj, MovingObject):
+                obj.move()
+
+        self.objects = [
+            obj for obj in self.objects if self.is_within_bounds(obj.anchor)
+        ]
