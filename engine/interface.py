@@ -1,18 +1,17 @@
 import signal
 
 from engine.utils import get_terminal_dimensions
+from objects.base import OceanObject
 
 
 class Ocean:
-    fishes: int
+    objects: list[OceanObject] = []
     rows: int
     cols: int
-    grid: list[list[str]]
 
     def __init__(self, fishes: int) -> None:
         self.fishes = fishes
         self.cols, self.rows = get_terminal_dimensions()
-        self.grid = [["a" for _ in range(self.cols)] for _ in range(self.rows)]
 
         # Register a signal handler for SIGWINCH
         signal.signal(signal.SIGWINCH, self._on_dimensions_change)
@@ -20,7 +19,24 @@ class Ocean:
     def _on_dimensions_change(self, signum: int, frame: object) -> None:
         """Called when the terminal dimensions change."""
         self.cols, self.rows = get_terminal_dimensions()
-        self.grid = [["a" for _ in range(self.cols)] for _ in range(self.rows)]
 
     def __str__(self) -> str:
-        return "\n".join("".join(row) for row in self.grid)
+        grid = [[" " for _ in range(self.cols)] for _ in range(self.rows)]
+        for obj in sorted(self.objects, key=lambda key: key.depth):
+            anchor_row, anchor_col = obj.anchor
+            for row, l in enumerate(obj.skin):
+                for col, char in enumerate(l):
+                    grid[anchor_row + row][anchor_col + col] = char
+        return "\n".join("".join(row) for row in grid)
+
+    def put_object(self, obj: OceanObject) -> None:
+        """Puts an object on the grid."""
+        if not self.within_bounds(obj.anchor):
+            raise ValueError("Anchor is out of bounds")
+
+        self.objects.append(obj)
+
+    def within_bounds(self, coords: tuple[int, int]) -> bool:
+        """Returns whether the given anchor is within bounds."""
+        row, col = coords
+        return 0 <= row < self.rows and 0 <= col < self.cols
