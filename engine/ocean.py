@@ -38,9 +38,11 @@ class Ocean:
             for row, l in enumerate(obj.skin):
                 for col, char in enumerate(l):
                     new_row, new_col = anchor_row + row, anchor_col + col
-
-                    if self.is_within_bounds((new_row, new_col)):
-                        grid[anchor_row + row][anchor_col + col] = char
+                    try:  # Due to signal handling, the terminal dimensions may change asynchronously
+                        if self.is_within_bounds((new_row, new_col)):
+                            grid[anchor_row + row][anchor_col + col] = char
+                    except IndexError:
+                        pass
 
         return "\n".join("".join(row) for row in grid)
 

@@ -21,6 +21,14 @@ FISHES: dict[str, dict[Direction, list[list[str]]]] = {
         Direction.RIGHT: parse_skin("tuna-right"),
         Direction.LEFT: parse_skin("tuna-left"),
     },
+    "big": {
+        Direction.RIGHT: parse_skin("big-right"),
+        Direction.LEFT: parse_skin("big-left"),
+    },
+    "fin": {
+        Direction.RIGHT: parse_skin("fin-right"),
+        Direction.LEFT: parse_skin("fin-left"),
+    },
 }
 
 
