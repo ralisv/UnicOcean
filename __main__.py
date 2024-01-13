@@ -3,7 +3,6 @@ from time import sleep
 
 from engine.ocean import Ocean
 from engine.utils import clear_terminal
-from objects.fishes import BlueFish
 
 
 def sigint_handler(signum: int, frame: object) -> None:
@@ -19,10 +18,9 @@ signal.signal(signal.SIGINT, sigint_handler)
 def main() -> None:
     clear_terminal()
     ocean = Ocean(10)
-    ocean.put_object(BlueFish((1, 0), speed=3))
-    ocean.put_object(BlueFish((5, 5), speed=5))
+
     while True:
-        sleep(0.5)
+        sleep(0.1)
         clear_terminal()
         ocean.update()
         print(ocean)

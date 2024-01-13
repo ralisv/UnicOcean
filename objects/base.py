@@ -23,7 +23,7 @@ class MovingObject(OceanObject):
         self,
         anchor_coordinates: tuple[int, int],
         skin: list[list[str]],
-        direction: Direction = Direction.RIGHT,
+        direction: Direction,
         speed: int = 1,
     ):
         super().__init__(anchor_coordinates)
@@ -40,8 +40,9 @@ class MovingObject(OceanObject):
         else:
             self.move_index += self.DEFAULT_MOVE_INDEX
 
-        row, col = self.direction.value
-        self.anchor = (self.anchor[0] + row, self.anchor[1] + col)
+        row_delta, col_delta = self.direction.value
+        row, col = self.anchor
+        self.anchor = (row + row_delta, col + col_delta)
 
 
 class StaticObject(OceanObject):
