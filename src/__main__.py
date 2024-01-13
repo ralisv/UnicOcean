@@ -36,10 +36,12 @@ def main() -> int:
 
     clear_terminal()
     ocean = Ocean(10)
+    ocean_string = str(ocean)
 
     while True:
-        print(ocean)
+        print(ocean_string)
         ocean.update()
+        ocean_string = str(ocean)
         sleep(1 / fps)
         clear_terminal()
 
