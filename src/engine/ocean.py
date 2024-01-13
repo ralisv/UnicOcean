@@ -9,10 +9,15 @@ from objects.fishes import FISH_TYPES, new_fish
 
 
 class Ocean:
-    SPAWN_RATE = 0.02
-    """ Chance of a new object spawning per frame """
+    SPAWN_RATE = 0.005
+    """ Chance of a new fish spawning per frame per row """
+
     DESPAWN_DISTANCE = 50
     """ Distance from the edge of the terminal at which objects are despawned """
+
+    @property
+    def spawn_chance(self) -> float:
+        return self.SPAWN_RATE * (self.rows / self.fishes**0.7)
 
     objects: list[OceanObject] = []
     rows: int
@@ -22,6 +27,7 @@ class Ocean:
         self.fishes = fishes
         self.cols, self.rows = get_terminal_dimensions()
 
+        # Generate random number of fishes
         for _ in range(ceil((self.rows * self.cols) ** 0.25)):
             self.put_object(self.generate_new_fish())
 
@@ -58,32 +64,33 @@ class Ocean:
         return 0 <= row < self.rows and 0 <= col < self.cols
 
     def generate_new_fish(self) -> MovingObject:
+        """Generates a new fish object."""
         fish_name = random.choice(list(FISH_TYPES.keys()))
         speed = random.random()
         direction = random.choice([Direction.LEFT, Direction.RIGHT])
         fish = new_fish(fish_name, speed, (0, 0), direction)
 
         if direction == Direction.LEFT:
-            anchor = (random.randint(0, self.rows - 2), self.cols)
+            anchor = (random.randint(1, self.rows - fish.height), self.cols)
         else:
-            anchor = (random.randint(0, self.rows - 2), -len(fish.skin[0]))
+            anchor = (random.randint(1, self.rows - fish.height), -fish.length)
 
         fish.anchor = anchor
         return fish
 
     def update(self) -> None:
-        """Updates the state of the ocean."""
+        """Updates the ocean."""
         for obj in self.objects:
             if isinstance(obj, MovingObject):
                 obj.move()
 
-        if len(self.objects) < (self.rows * self.cols) ** 0.5 and random.random() < 0.1:
+        if random.random() < self.spawn_chance:
             self.put_object(self.generate_new_fish())
 
         self.objects = [obj for obj in self.objects if not self.has_to_despawn(obj)]
 
     def has_to_despawn(self, obj: OceanObject) -> bool:
-        """Returns whether the given object has an anchor out of bounds."""
+        """Returns whether the given object has to be despawned."""
         row, col = obj.anchor
         return (
             row < -self.DESPAWN_DISTANCE

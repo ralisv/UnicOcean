@@ -2,11 +2,8 @@ import json
 from pathlib import Path
 from typing import Any
 
-from core import Direction
+from core import Direction, Skin
 from objects.base import MovingObject
-
-Skin = list[list[str]]
-
 
 FISHES_DIRECTORY = Path(__file__).parent.parent.parent / "assets" / "fishes"
 FISH_TYPES: dict[str, dict[str, Any]] = {}

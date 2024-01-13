@@ -1,5 +1,7 @@
 from enum import Enum
 
+Skin = list[list[str]]
+
 
 class Direction(Enum):
     UP = (-1, 0)

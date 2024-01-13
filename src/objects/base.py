@@ -1,17 +1,29 @@
 from math import floor
 
-from core import Direction
+from core import Direction, Skin
 
 
 class OceanObject:
-    skin: list[list[str]]
+    skin: Skin
+    """ Skin of the object """
+
     anchor: tuple[int, int]
+    """ Coordinates of the top left corner of the object """
+
     depth: int
     """ Z-index of the object, the higher the less overshadowed """
 
-    def __init__(self, anchor_coordinates: tuple[int, int], depth: int = 0):
+    height: int
+    """ Height of the object """
+    length: int
+    """ Length of the object """
+
+    def __init__(self, anchor_coordinates: tuple[int, int], depth: int, skin: Skin):
         self.anchor = anchor_coordinates
         self.depth = depth
+        self.skin = skin
+        self.height = len(skin)
+        self.length = len(skin[0])
 
 
 class MovingObject(OceanObject):
@@ -24,12 +36,12 @@ class MovingObject(OceanObject):
     def __init__(
         self,
         anchor_coordinates: tuple[int, int],
-        skin: list[list[str]],
+        skin: Skin,
         direction: Direction,
         speed: float,
+        depth: int = 0,
     ):
-        super().__init__(anchor_coordinates)
-        self.skin = skin
+        super().__init__(anchor_coordinates, depth, skin)
         self.direction = direction
         self.speed = min(self.MAX_SPEED, speed)
         self.speed = max(self.MIN_SPEED, speed)
@@ -49,20 +61,20 @@ class MovingObject(OceanObject):
 
 
 class Fish(MovingObject):
-    skin_left: list[list[str]]
+    skin_left: Skin
     """ Skin for the fish swimming in the left direction """
-    skin_right: list[list[str]]
+    skin_right: Skin
     """ Skin for the fish swimming in the right direction """
     carnivorous: bool
 
     def __init__(
         self,
         anchor_coordinates: tuple[int, int],
-        skin: list[list[str]],
+        skin: Skin,
         direction: Direction,
         speed: int,
-        skin_left: list[list[str]],
-        skin_right: list[list[str]],
+        skin_left: Skin,
+        skin_right: Skin,
         carnivorous: bool,
     ):
         super().__init__(anchor_coordinates, skin, direction, speed)
@@ -79,6 +91,6 @@ class Fish(MovingObject):
 
 
 class StaticObject(OceanObject):
-    def __init__(self, anchor_coordinates: tuple[int, int], skin: list[list[str]]):
-        super().__init__(anchor_coordinates)
+    def __init__(self, anchor_coordinates: tuple[int, int], skin: Skin):
+        super().__init__(anchor_coordinates, 0, skin)
         self.skin = skin

@@ -24,10 +24,8 @@ def reverse_text(input_file: Path) -> str:
 
 
 def main() -> int:
-    # Create the parser
     parser = argparse.ArgumentParser(description="Process some files.")
 
-    # Add the positional arguments with metavar
     parser.add_argument(
         "input_files",
         metavar="input files",
@@ -36,7 +34,6 @@ def main() -> int:
         help="input files to be processed",
     )
 
-    # Add the optional argument for the output file with metavar
     parser.add_argument(
         "-o",
         "--output",
@@ -46,7 +43,6 @@ def main() -> int:
         help="output file where the result will be saved",
     )
 
-    # Parse the arguments
     args = parser.parse_args()
 
     output = open(args.output_file, "w") if args.output_file else sys.stdout
@@ -60,11 +56,6 @@ def main() -> int:
         return 1
 
     return 0
-
-
-if __name__ == "__main__":
-    # Call the main function with the parsed arguments
-    main()
 
 
 if __name__ == "__main__":
