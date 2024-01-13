@@ -10,6 +10,8 @@ def main() -> None:
     ocean = Ocean(10)
     while True:
         sleep(1)
+        clear_terminal()
+        print(ocean)
 
 
 if __name__ == "__main__":
