@@ -1,4 +1,4 @@
-from pydantic import BaseModel, validator
+from pydantic import BaseModel, PositiveFloat, root_validator
 
 from core import OBJECTS_DIRECTORY, CollisionEffect, Direction, Skin
 from objects.base import MovingObject, OceanObject
@@ -11,18 +11,18 @@ FISHES: dict[str, "FishInfo"] = {}
 
 
 class FishConfiguration(BaseModel):
-    min_speed: float = 0.05
-    max_speed: float = 1.0
+    min_speed: PositiveFloat = 0.05
+    max_speed: PositiveFloat = 1.0
     carnivorous: bool = False
     rarity: int = 1
     colors: dict[str, str] = {}
 
-    @validator("min_speed")
-    @classmethod
-    def min_speed_must_be_positive(cls, value: float) -> float:
-        if value <= 0:
-            raise ValueError("min_speed must be positive")
-        return value
+    @root_validator
+    def validate_speeds(cls, values: dict[str, float]) -> dict[str, float]:
+        if values["min_speed"] > values["max_speed"]:
+            raise ValueError("min_speed cannot be greater than max_speed")
+
+        return values
 
 
 class FishInfo(FishConfiguration):
