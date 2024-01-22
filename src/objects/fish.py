@@ -1,6 +1,6 @@
-from core import OBJECTS_DIRECTORY, CollisionEffect, Direction, Skin
-from objects.base import MovingObject, OceanObject
+from common import OBJECTS_DIRECTORY, CollisionEffect, Direction, Skin
 from objects.config import FishConfig
+from objects.core import MovingObject, OceanObject
 
 FISHES_DIRECTORY = OBJECTS_DIRECTORY / "fish"
 """The directory where all the fishes are stored"""

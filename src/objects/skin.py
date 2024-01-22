@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from core import MIRRORING_CHARACTERS, Skin, parse_colors
+from common import MIRRORING_CHARACTERS, Skin, parse_colors
 
 
 def load_skin(path: Path, colors: dict[str, str]) -> tuple[Skin, Skin]:

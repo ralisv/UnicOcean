@@ -2,9 +2,9 @@ import random
 import signal
 from math import ceil
 
-from core import Direction
+from common import Direction
 from engine.utils import get_terminal_dimensions
-from objects.base import MovingObject, OceanObject
+from objects.core import MovingObject, OceanObject
 from objects.fish import FISHES, Fish
 
 

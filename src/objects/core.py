@@ -2,7 +2,7 @@
 
 from math import floor
 
-from core import Direction, Skin
+from common import Direction, Skin
 
 
 class OceanObject:
