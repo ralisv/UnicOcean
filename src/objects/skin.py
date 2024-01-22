@@ -1,14 +1,6 @@
 from pathlib import Path
 
-from core import Skin
-
-MIRRORING_CHARACTERS = [
-    ("(", ")"),
-    ("[", "]"),
-    ("{", "}"),
-    ("<", ">"),
-    ("/", "\\"),
-]
+from core import MIRRORING_CHARACTERS, Skin, parse_colors
 
 
 def load_skin(path: Path, colors: dict[str, str]) -> tuple[Skin, Skin]:
@@ -29,10 +21,11 @@ def load_skin(path: Path, colors: dict[str, str]) -> tuple[Skin, Skin]:
 
 def dye_skin(skin: Skin, colors: dict[str, str]) -> Skin:
     """Dyes the skin with the given colors."""
+    color_mapping = parse_colors(colors)
     for row, line in enumerate(skin):
         for col, char in enumerate(line):
-            if char in colors:
-                skin[row][col] = f"\033[38;2;{colors[char]}m{char}\033[0m"
+            if char in color_mapping:
+                skin[row][col] = color_mapping[char].wrap(char)
 
     return skin
 
@@ -40,7 +33,7 @@ def dye_skin(skin: Skin, colors: dict[str, str]) -> Skin:
 def reverse_skin(skin: str) -> str:
     """Reverses the direction where the fish is looking in the given skin."""
 
-    for fst, snd in MIRRORING_CHARACTERS:
+    for fst, snd in MIRRORING_CHARACTERS.items():
         skin = skin.replace(fst, "TEMP").replace(snd, fst).replace("TEMP", snd)
 
     lines = [line[::-1] for line in skin.splitlines()]

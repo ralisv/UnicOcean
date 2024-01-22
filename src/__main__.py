@@ -6,7 +6,7 @@ from time import sleep
 
 from engine.ocean import Ocean
 from engine.utils import clear_terminal
-from objects.fish import FISHES, FISHES_DIRECTORY, FishConfiguration, FishInfo
+from objects.fish import FISHES, FISHES_DIRECTORY, FishConfig, FishInfo
 from objects.skin import load_skin
 
 DEFAULT_FPS = 5
@@ -34,7 +34,7 @@ def load_objects() -> None:
         if not config_file.exists():
             continue
 
-        config = FishConfiguration.parse_file(config_file)
+        config = FishConfig.parse_file(config_file)
         left, right = load_skin(fish_dir / "skin.txt", config.colors)
 
         FISHES[fish_dir.name] = FishInfo(

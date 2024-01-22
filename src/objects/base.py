@@ -1,3 +1,5 @@
+"""The module which contains the base classes for all the objects in the ocean."""
+
 from math import floor
 
 from core import Direction, Skin

@@ -1,7 +1,6 @@
-from pydantic import BaseModel, PositiveFloat, root_validator
-
 from core import OBJECTS_DIRECTORY, CollisionEffect, Direction, Skin
 from objects.base import MovingObject, OceanObject
+from objects.config import FishConfig
 
 FISHES_DIRECTORY = OBJECTS_DIRECTORY / "fish"
 """The directory where all the fishes are stored"""
@@ -10,22 +9,7 @@ FISHES: dict[str, "FishInfo"] = {}
 """A dictionary of all the registered fishes"""
 
 
-class FishConfiguration(BaseModel):
-    min_speed: PositiveFloat = 0.05
-    max_speed: PositiveFloat = 1.0
-    carnivorous: bool = False
-    rarity: int = 1
-    colors: dict[str, str] = {}
-
-    @root_validator
-    def validate_speeds(cls, values: dict[str, float]) -> dict[str, float]:
-        if values["min_speed"] > values["max_speed"]:
-            raise ValueError("min_speed cannot be greater than max_speed")
-
-        return values
-
-
-class FishInfo(FishConfiguration):
+class FishInfo(FishConfig):
     name: str
     skin_left: Skin
     skin_right: Skin
