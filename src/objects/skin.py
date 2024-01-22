@@ -1,6 +1,12 @@
 from pathlib import Path
 
-from common import MIRRORING_CHARACTERS, Skin, parse_colors
+from common import Skin, parse_colors
+
+MIRROR_PATH = Path(__file__).parent.parent.parent / "assets" / "mirror.txt"
+
+
+MIRROR: dict[str, str] = {}
+"""Char to char mapping for smooth skin mirroring, loaded from assets/mirror.txt"""
 
 
 def load_skin(path: Path, colors: dict[str, str]) -> tuple[Skin, Skin]:
@@ -15,7 +21,7 @@ def load_skin(path: Path, colors: dict[str, str]) -> tuple[Skin, Skin]:
 
     return (
         dye_skin(parse_skin(raw_skin), colors),
-        dye_skin(parse_skin(reverse_skin(raw_skin)), colors),
+        dye_skin(parse_skin(mirror_skin(raw_skin)), colors),
     )
 
 
@@ -30,10 +36,10 @@ def dye_skin(skin: Skin, colors: dict[str, str]) -> Skin:
     return skin
 
 
-def reverse_skin(skin: str) -> str:
+def mirror_skin(skin: str) -> str:
     """Reverses the direction where the fish is looking in the given skin."""
 
-    for fst, snd in MIRRORING_CHARACTERS.items():
+    for fst, snd in MIRROR.items():
         skin = skin.replace(fst, "TEMP").replace(snd, fst).replace("TEMP", snd)
 
     lines = [line[::-1] for line in skin.splitlines()]

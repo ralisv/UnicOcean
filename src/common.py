@@ -8,15 +8,6 @@ Skin = list[list[str]]
 OBJECTS_DIRECTORY = Path(__file__).parent.parent / "assets" / "objects"
 
 
-MIRRORING_CHARACTERS = {
-    "(": ")",
-    "[": "]",
-    "{": "}",
-    "<": ">",
-    "/": "\\",
-}
-
-
 class Direction(Enum):
     UP = (-1, 0)
     DOWN = (1, 0)
