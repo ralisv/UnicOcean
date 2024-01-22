@@ -1,6 +1,4 @@
-from dataclasses import dataclass
-
-from pydantic import BaseModel
+from pydantic import BaseModel, validator
 
 from core import OBJECTS_DIRECTORY, CollisionEffect, Direction, Skin
 from objects.base import MovingObject, OceanObject
@@ -12,26 +10,25 @@ FISHES: dict[str, "FishInfo"] = {}
 """A dictionary of all the registered fishes"""
 
 
-@dataclass(frozen=True)
-class FishInfo:
-    name: str
-    skin_left: Skin
-    skin_right: Skin
-    min_speed: float
-    max_speed: float
-    carnivorous: bool
-    rarity: int
-    colors: dict[str, str]
-    length: int
-    height: int
-
-
 class FishConfiguration(BaseModel):
     min_speed: float = 0.05
     max_speed: float = 1.0
     carnivorous: bool = False
     rarity: int = 1
     colors: dict[str, str] = {}
+
+    @validator("min_speed")
+    @classmethod
+    def min_speed_must_be_positive(cls, value: float) -> float:
+        if value <= 0:
+            raise ValueError("min_speed must be positive")
+        return value
+
+
+class FishInfo(FishConfiguration):
+    name: str
+    skin_left: Skin
+    skin_right: Skin
 
 
 class Fish(MovingObject):

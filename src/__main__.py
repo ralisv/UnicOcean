@@ -46,8 +46,6 @@ def load_objects() -> None:
             carnivorous=config.carnivorous,
             rarity=config.rarity,
             colors=config.colors,
-            length=len(left[0]),
-            height=len(left),
         )
 
 

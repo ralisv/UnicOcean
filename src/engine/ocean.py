@@ -70,13 +70,13 @@ class Ocean:
         speed = random.uniform(fish_info.min_speed, fish_info.max_speed)
         direction = random.choice([Direction.LEFT, Direction.RIGHT])
 
+        fish_length = len(fish_info.skin_left[0])
+        fish_height = len(fish_info.skin_left)
+
         if direction == Direction.LEFT:
-            anchor = (random.randint(1, self.rows - fish_info.height), self.cols)
+            anchor = (random.randint(1, self.rows - fish_height), self.cols)
         else:
-            anchor = (
-                random.randint(1, self.rows - fish_info.height),
-                -fish_info.length,
-            )
+            anchor = (random.randint(1, self.rows - fish_height), -fish_length)
 
         fish = Fish(
             anchor,
