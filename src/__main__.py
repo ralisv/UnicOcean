@@ -6,6 +6,8 @@ from time import sleep
 
 from engine.ocean import Ocean
 from engine.utils import clear_terminal
+from objects.fish import FISHES, FISHES_DIRECTORY, FishConfiguration, FishInfo
+from objects.skin import load_skin
 
 DEFAULT_FPS = 5
 
@@ -18,6 +20,35 @@ def sigint_handler(signum: int, frame: object) -> None:
 
 
 signal.signal(signal.SIGINT, sigint_handler)
+
+
+def load_objects() -> None:
+    """Loads all objects from the objects directory, should be called before Ocean is instantiated"""
+
+    # Load fishes
+    for fish_dir in FISHES_DIRECTORY.iterdir():
+        if not fish_dir.is_dir():
+            continue
+
+        config_file = fish_dir / "config.json"
+        if not config_file.exists():
+            continue
+
+        config = FishConfiguration.parse_file(config_file)
+        left, right = load_skin(fish_dir / "skin.txt", config.colors)
+
+        FISHES[fish_dir.name] = FishInfo(
+            name=fish_dir.name,
+            skin_left=left,
+            skin_right=right,
+            min_speed=config.min_speed,
+            max_speed=config.max_speed,
+            carnivorous=config.carnivorous,
+            rarity=config.rarity,
+            colors=config.colors,
+            length=len(left[0]),
+            height=len(left),
+        )
 
 
 def main() -> int:
@@ -34,16 +65,19 @@ def main() -> int:
 
     fps = args.fps or DEFAULT_FPS
 
-    clear_terminal()
+    load_objects()
+
     ocean = Ocean(10)
-    ocean_string = str(ocean)
+
+    clear_terminal()
+    print(ocean)
 
     while True:
-        print(ocean_string)
         ocean.update()
         ocean_string = str(ocean)
         sleep(1 / fps)
         clear_terminal()
+        print(ocean_string)
 
 
 if __name__ == "__main__":

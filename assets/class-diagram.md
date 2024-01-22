@@ -5,17 +5,22 @@ classDiagram
     OceanObject <|-- StaticObject
     MovingObject <|-- Fish
 
-    class OceanObject{
-      +anchorCoordinates
+    class OceanObject {
+      skin
+      zIndex
+      anchorCoordinates
+      update()
+      on_collision()
     }
     class StaticObject {
     }
     class MovingObject {
-      +Move()
+      direction
+      move()
     }
     class Fish {
-      +is_carnivorous
-      +mouthCoordinates
+      isCarnivorous
+      mouthCoordinates
     }
 ```
 

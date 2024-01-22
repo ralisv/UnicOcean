@@ -1,0 +1,15 @@
+Use pedantic for fish init
+Add submarine
+Implement diving into the depths of the ocean
+Implement sand, the bottom of the ocean
+Add shipwreck
+Add crabs
+Add treasure
+Implement carnivorous fishes
+Implement fish path finding to the foot
+Implement fishermen
+Make different species spawn depending on depth
+Add fissure
+Add diver with harpoon
+
+The users will be free to add their own models and their own settings to all kinds of classes implemented.

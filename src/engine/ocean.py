@@ -5,7 +5,7 @@ from math import ceil
 from core import Direction
 from engine.utils import get_terminal_dimensions
 from objects.base import MovingObject, OceanObject
-from objects.fishes import FISH_TYPES, new_fish
+from objects.fish import FISHES, Fish
 
 
 class Ocean:
@@ -27,7 +27,7 @@ class Ocean:
         self.fishes = fishes
         self.cols, self.rows = get_terminal_dimensions()
 
-        # Generate random number of fishes
+        # Generate some fishes
         for _ in range(ceil((self.rows * self.cols) ** 0.25)):
             self.put_object(self.generate_new_fish())
 
@@ -40,7 +40,7 @@ class Ocean:
 
     def __str__(self) -> str:
         grid = [[" " for _ in range(self.cols)] for _ in range(self.rows)]
-        for obj in sorted(self.objects, key=lambda key: key.depth):
+        for obj in self.objects:
             anchor_row, anchor_col = obj.anchor
 
             for row, l in enumerate(obj.skin):
@@ -65,17 +65,29 @@ class Ocean:
 
     def generate_new_fish(self) -> MovingObject:
         """Generates a new fish object."""
-        fish_name = random.choice(list(FISH_TYPES.keys()))
-        speed = random.random()
+        fish_name = random.choice(list(FISHES.keys()))
+        fish_info = FISHES[fish_name]
+        speed = random.uniform(fish_info.min_speed, fish_info.max_speed)
         direction = random.choice([Direction.LEFT, Direction.RIGHT])
-        fish = new_fish(fish_name, speed, (0, 0), direction)
 
         if direction == Direction.LEFT:
-            anchor = (random.randint(1, self.rows - fish.height), self.cols)
+            anchor = (random.randint(1, self.rows - fish_info.height), self.cols)
         else:
-            anchor = (random.randint(1, self.rows - fish.height), -fish.length)
+            anchor = (
+                random.randint(1, self.rows - fish_info.height),
+                -fish_info.length,
+            )
 
-        fish.anchor = anchor
+        fish = Fish(
+            anchor,
+            FISHES[fish_name].skin_left,
+            FISHES[fish_name].skin_right,
+            direction,
+            speed,
+            FISHES[fish_name].carnivorous,
+            FISHES[fish_name].rarity,
+        )
+
         return fish
 
     def update(self) -> None:
